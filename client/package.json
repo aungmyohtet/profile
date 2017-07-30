@@ -23,8 +23,10 @@
     "preact-cli": "^1.4.1"
   },
   "dependencies": {
+    "jquery": "^3.2.1",
     "preact": "^8.2.1",
     "preact-compat": "^3.16.0",
-    "preact-router": "^2.5.5"
+    "preact-router": "^2.5.5",
+    "socket.io-client": "^2.0.3"
   }
 }

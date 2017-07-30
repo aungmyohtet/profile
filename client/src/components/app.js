@@ -7,25 +7,48 @@ import Profile from '../routes/profile';
 // import Home from 'async!./home';
 // import Profile from 'async!./profile';
 
+import MessageInput from './MessageInput';
+import MessageList from './MessageList'
+
 export default class App extends Component {
-	/** Gets fired when the route changes.
-	 *	@param {Object} event		"change" event from [preact-router](http://git.io/preact-router)
-	 *	@param {string} event.url	The newly routed URL
-	 */
-	handleRoute = e => {
-		this.currentUrl = e.url;
-	};
+
+	constructor(props) {
+		super(props);
+		this.state = {
+			messages: [],
+			inputType: null
+		}
+		this.send = this.send.bind(this);
+	}
+
+	componentDidMount() {
+		var self = this;
+		var socket = require('socket.io-client')('http://localhost:3000');
+		socket.on('message', function (message) {
+			var messages = self.state.messages.splice(0);
+			messages.push(message);
+			self.setState({
+				messages: messages
+			});
+		});
+		socket.on('input', function (input) {
+			self.setState({
+				inputType: input.type
+			});
+		});
+		this.socket = socket;
+	}
 
 	render() {
 		return (
 			<div id="app">
-				<Header />
-				<Router onChange={this.handleRoute}>
-					<Home path="/" />
-					<Profile path="/profile/" user="me" />
-					<Profile path="/profile/:user" />
-				</Router>
+				<MessageList messages={this.state.messages} />
+				<MessageInput type={this.inputType} send={this.send} />
 			</div>
 		);
+	}
+
+	send(message) {
+		this.socket.emit('message', message);
 	}
 }
