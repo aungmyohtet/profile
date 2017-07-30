@@ -90,5 +90,4 @@ function onListening() {
 
 // init socket app
 var io = require('socket.io')(server);
-var SocketApp = require('../socket-app');
-var socketApp = new SocketApp(io);
+var chatBot = require('../chatbot')(io);

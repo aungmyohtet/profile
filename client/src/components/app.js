@@ -24,18 +24,14 @@ export default class App extends Component {
 	componentDidMount() {
 		var self = this;
 		var socket = require('socket.io-client')();
-		socket.on('message', function (message) {
+		socket.on('message', function (data) {
 			var messages = self.state.messages.splice(0);
-			messages.push(message);
 			self.setState({
-				messages: messages
+				messages: messages.concat(data.messages),
+				input: data.input
 			});
 		});
-		socket.on('input', function (data) {
-			self.setState({
-				input: data
-			});
-		});
+		
 		this.socket = socket;
 	}
 

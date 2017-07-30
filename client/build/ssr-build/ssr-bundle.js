@@ -1592,20 +1592,17 @@ var MessageInput = function (_Component) {
     MessageInput.prototype.render = function render() {
         var _this2 = this;
 
-        console.log("render method in MessageInput");
         if (this.props.input.type === "text") {
-            console.log("type is text");
             return __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_preact__["h"])(
                 'div',
                 null,
                 __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_preact__["h"])('input', { type: 'text', onChange: this.handleChange, onKeyPress: this.handleKeyPress })
             );
         } else if (this.props.input.type === "select") {
-            console.log("type is select");
-            var buttons = this.props.input.data.map(function (d) {
+            var buttons = this.props.input.selection.map(function (d) {
                 return __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_preact__["h"])(
                     'button',
-                    { onClick: _this2.handleClick },
+                    { 'data-value': d, onClick: _this2.handleClick },
                     d
                 );
             });
@@ -1621,16 +1618,14 @@ var MessageInput = function (_Component) {
 
     MessageInput.prototype.handleKeyPress = function handleKeyPress(e) {
         if (e.key === 'Enter') {
-            console.log("Enter key pressed");
-            var message = { type: 'text', question: 'name', content: e.target.value };
+            var message = { question: this.props.input.question, answer: e.target.value };
             this.props.send(message);
             e.target.value = '';
         }
     };
 
     MessageInput.prototype.handleClick = function handleClick(e) {
-        console.log("Clicked!");
-        var message = { type: 'select', question: 'programming language', content: "NodeJS" };
+        var message = { question: this.props.input.question, answer: e.target.getAttribute('data-value') };
         this.props.send(message);
     };
 
@@ -5125,7 +5120,6 @@ var MessageList = function (_Component) {
     }
 
     MessageList.prototype.render = function render() {
-        console.log("render method in MessageList");
         var messageList = this.props.messages.map(function (message) {
             return __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_preact__["h"])(
                 'li',
@@ -7967,21 +7961,15 @@ var App = function (_Component) {
 
 	App.prototype.componentDidMount = function componentDidMount() {
 		var self = this;
-		var socket = __webpack_require__("+1g+")('http://localhost:3000');
-		socket.on('message', function (message) {
-			console.log("message received!");
+		var socket = __webpack_require__("+1g+")();
+		socket.on('message', function (data) {
 			var messages = self.state.messages.splice(0);
-			messages.push(message);
 			self.setState({
-				messages: messages
+				messages: messages.concat(data.messages),
+				input: data.input
 			});
 		});
-		socket.on('input', function (data) {
-			console.log("input message recieved 2");
-			self.setState({
-				input: data
-			});
-		});
+
 		this.socket = socket;
 	};
 

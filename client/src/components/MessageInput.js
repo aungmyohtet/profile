@@ -18,7 +18,7 @@ export default class MessageInput extends Component {
                 </div>
             );
         } else if (this.props.input.type === "select") {
-            var buttons = this.props.input.data.map((d) => <button onClick={this.handleClick}>{d}</button>);
+            var buttons = this.props.input.selection.map((d) => <button data-value={d} onClick={this.handleClick}>{d}</button>);
             return (
                 <div>
                     {buttons}
@@ -32,14 +32,14 @@ export default class MessageInput extends Component {
 
     handleKeyPress(e) {
         if (e.key === 'Enter') {
-            var message = { type: 'text', question: 'name', content: e.target.value }
+            var message = { question: this.props.input.question, answer: e.target.value }
             this.props.send(message);
             e.target.value = '';
         }
     }
 
     handleClick(e) {
-        var message = { type: 'select', question: 'programming language', content: "NodeJS"};
+        var message = { question: this.props.input.question, answer: e.target.getAttribute('data-value') };
         this.props.send(message);
     }
 }
