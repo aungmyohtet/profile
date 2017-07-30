@@ -7,29 +7,39 @@ export default class MessageInput extends Component {
         super(props);
         this.handleKeyPress = this.handleKeyPress.bind(this);
         this.render = this.render.bind(this);
+        this.handleClick = this.handleClick.bind(this);
     }
 
     render() {
-        if (this.props.type = "text") {
+        if (this.props.input.type === "text") {
             return (
                 <div>
                     <input type="text" onChange={this.handleChange} onKeyPress={this.handleKeyPress}></input>
                 </div>
             );
-        } else {
+        } else if (this.props.input.type === "select") {
+            var buttons = this.props.input.data.map((d) => <button onClick={this.handleClick}>{d}</button>);
             return (
-                <div></div>
+                <div>
+                    {buttons}
+                </div>
             );
+        } else {
+            return (<div>
+            </div>);
         }
     }
 
     handleKeyPress(e) {
         if (e.key === 'Enter') {
-            console.log("Enter key pressed");
             var message = { type: 'text', question: 'name', content: e.target.value }
             this.props.send(message);
-            this.setState({ input: '' })
             e.target.value = '';
         }
+    }
+
+    handleClick(e) {
+        var message = { type: 'select', question: 'programming language', content: "NodeJS"};
+        this.props.send(message);
     }
 }

@@ -1585,15 +1585,34 @@ var MessageInput = function (_Component) {
 
         _this.handleKeyPress = _this.handleKeyPress.bind(_this);
         _this.render = _this.render.bind(_this);
+        _this.handleClick = _this.handleClick.bind(_this);
         return _this;
     }
 
     MessageInput.prototype.render = function render() {
-        if (this.props.type = "text") {
+        var _this2 = this;
+
+        console.log("render method in MessageInput");
+        if (this.props.input.type === "text") {
+            console.log("type is text");
             return __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_preact__["h"])(
                 'div',
                 null,
                 __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_preact__["h"])('input', { type: 'text', onChange: this.handleChange, onKeyPress: this.handleKeyPress })
+            );
+        } else if (this.props.input.type === "select") {
+            console.log("type is select");
+            var buttons = this.props.input.data.map(function (d) {
+                return __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_preact__["h"])(
+                    'button',
+                    { onClick: _this2.handleClick },
+                    d
+                );
+            });
+            return __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_preact__["h"])(
+                'div',
+                null,
+                buttons
             );
         } else {
             return _ref;
@@ -1605,9 +1624,14 @@ var MessageInput = function (_Component) {
             console.log("Enter key pressed");
             var message = { type: 'text', question: 'name', content: e.target.value };
             this.props.send(message);
-            this.setState({ input: '' });
             e.target.value = '';
         }
+    };
+
+    MessageInput.prototype.handleClick = function handleClick(e) {
+        console.log("Clicked!");
+        var message = { type: 'select', question: 'programming language', content: "NodeJS" };
+        this.props.send(message);
     };
 
     return MessageInput;
@@ -5101,6 +5125,7 @@ var MessageList = function (_Component) {
     }
 
     MessageList.prototype.render = function render() {
+        console.log("render method in MessageList");
         var messageList = this.props.messages.map(function (message) {
             return __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_preact__["h"])(
                 'li',
@@ -7934,7 +7959,7 @@ var App = function (_Component) {
 
 		_this.state = {
 			messages: [],
-			inputType: null
+			input: { type: null }
 		};
 		_this.send = _this.send.bind(_this);
 		return _this;
@@ -7944,15 +7969,17 @@ var App = function (_Component) {
 		var self = this;
 		var socket = __webpack_require__("+1g+")('http://localhost:3000');
 		socket.on('message', function (message) {
+			console.log("message received!");
 			var messages = self.state.messages.splice(0);
 			messages.push(message);
 			self.setState({
 				messages: messages
 			});
 		});
-		socket.on('input', function (input) {
+		socket.on('input', function (data) {
+			console.log("input message recieved 2");
 			self.setState({
-				inputType: input.type
+				input: data
 			});
 		});
 		this.socket = socket;
@@ -7963,7 +7990,7 @@ var App = function (_Component) {
 			'div',
 			{ id: 'app' },
 			__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_preact__["h"])(__WEBPACK_IMPORTED_MODULE_6__MessageList__["a" /* default */], { messages: this.state.messages }),
-			__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_preact__["h"])(__WEBPACK_IMPORTED_MODULE_5__MessageInput__["a" /* default */], { type: this.inputType, send: this.send })
+			__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_preact__["h"])(__WEBPACK_IMPORTED_MODULE_5__MessageInput__["a" /* default */], { input: this.state.input, send: this.send })
 		);
 	};
 

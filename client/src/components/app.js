@@ -16,7 +16,7 @@ export default class App extends Component {
 		super(props);
 		this.state = {
 			messages: [],
-			inputType: null
+			input: {type: null}
 		}
 		this.send = this.send.bind(this);
 	}
@@ -31,9 +31,9 @@ export default class App extends Component {
 				messages: messages
 			});
 		});
-		socket.on('input', function (input) {
+		socket.on('input', function (data) {
 			self.setState({
-				inputType: input.type
+				input: data
 			});
 		});
 		this.socket = socket;
@@ -43,7 +43,7 @@ export default class App extends Component {
 		return (
 			<div id="app">
 				<MessageList messages={this.state.messages} />
-				<MessageInput type={this.inputType} send={this.send} />
+				<MessageInput input={this.state.input} send={this.send} />
 			</div>
 		);
 	}
