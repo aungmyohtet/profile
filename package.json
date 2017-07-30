@@ -1,0 +1,11 @@
+{
+  "name": "myjobs-challenge",
+  "version": "0.0.1",
+  "description": "no description",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "aungmyohtet <aungmyohtet.outlook.com>",
+  "license": "ISC"
+}
