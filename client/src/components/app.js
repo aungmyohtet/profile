@@ -23,7 +23,7 @@ export default class App extends Component {
 
 	componentDidMount() {
 		var self = this;
-		var socket = require('socket.io-client')('http://localhost:3000');
+		var socket = require('socket.io-client')();
 		socket.on('message', function (message) {
 			var messages = self.state.messages.splice(0);
 			messages.push(message);
